@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import express from "express";
+import express,{Request,Response} from "express";
 import dotenv from "dotenv";
 dotenv.config();
 const PORT = 5000 || process.env.PORT;
@@ -7,9 +7,6 @@ const app = express()
 
 mongoose.set("strictQuery", true);
 
-app.get("/",(req,res)=>{
-  res.send("helllo from backend")
-})
 
 
 mongoose
@@ -18,9 +15,7 @@ mongoose
    
   })
   .then(() => {
-    app.listen(PORT, () =>
-      console.log(`server app and Database listening on port ${PORT}`)
-    );
+    console.log("DB connected")
   })
   .catch((err) => {
     console.log(err);
