@@ -17,7 +17,13 @@ const userSchema = new mongoose.Schema({
     pic: {
         type: String,
         default: "https://img.freepik.com/premium-vector/account-icon-user-icon-vector-graphics_292645-552.jpg"
-    }
+    },
+    contacts:[
+        {}
+    ],
+    grpContacts:[
+        {}
+    ]
 }, { timestamps: true });
 
 userSchema.methods.matchPassword = async function (candidatePassword: string) {

@@ -1,28 +1,37 @@
 import { Response } from "express";
 import UserModel from "../models/userModel";
-import bcrypt from "bcryptjs"
-import { errorMonitor } from "events";
+import bcrypt from "bcryptjs";
+import { createJwt } from "../config/createToken";
+
 
 export const signup = async (req: any, res: Response) => {
-    console.log(req.body)
+
 
     const { username, email, password } = req.body;
-    const userFile = await UserModel.create({
+    const user = await UserModel.create({
         user: username,
         email: email,
         password: password
     })
-    res.status(201).send(userFile);
+    // let token = createJwt(user!._id.toString());
+    // const options = {
+    //     expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),  //90 days expiration 
+    //     httpOnly: true
+    // }
+
+    // res.status(201).cookie("jwt",token,options).json(user);
+    res.status(200).json(user);
+
 
 
 }
 export const login = async (req: any, res: Response) => {
-    console.log("receiveed");
+
 
     const { email, password } = req.body;
     const user = await UserModel.findOne({ email: email });
 
-    console.log(user);
+
 
     bcrypt.compare(password, user?.password!, function (err, data) {
 
@@ -32,8 +41,20 @@ export const login = async (req: any, res: Response) => {
             throw new Error("Got some error");
         }
         else if (data) {
-            console.log(data);
-            res.send("Login successful")
+
+            // let token = createJwt(user!._id.toString());
+
+            // const options = {
+            //     expiresIn: "10d",
+            //     httpOnly: true
+            // }
+
+            // res.cookie("jwt", token, options);
+            res.status(201).json(user);
+            // res.status(201).cookie("jwt",token,options).json(user);
+
+
+
         } else {
             res.status(406).send("Password do not match")
         }
@@ -41,6 +62,6 @@ export const login = async (req: any, res: Response) => {
 
 
 
-    
+
 
 }
