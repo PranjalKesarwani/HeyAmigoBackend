@@ -1,6 +1,28 @@
-import jwt from "jsonwebtoken"
+import jwt, { JwtPayload } from "jsonwebtoken"
+import { NextFunction, Request, Response } from "express"
+import UserModel from "../models/userModel";
 
-// export const createJwt = (id: string) => {
-//     return jwt.sign({ id }, process.env.JWT_SECRET as string)
-// }
+
+export const auth = async (req: any, res: Response, next: NextFunction) => {
+    const token = req.cookies.jwt;
+    //if the request does not have token
+    if (!token) {
+        res.status(401).json({ isAuthenticated: false });
+    }
+
+    const requestedId = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload
+
+    //Finding userDetails using id
+    const userFile = await UserModel.findById(requestedId);
+
+    if (!userFile) {
+        res.status(401).send({ isAuthenticated: false });
+    }
+
+    req.user = userFile;
+
+    next()
+
+   
+}
 

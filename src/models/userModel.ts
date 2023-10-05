@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs"
 
 const userSchema = new mongoose.Schema({
-    user: {
+    username: {
         type: String,
         required: true
     },
@@ -19,10 +19,18 @@ const userSchema = new mongoose.Schema({
         default: "https://img.freepik.com/premium-vector/account-icon-user-icon-vector-graphics_292645-552.jpg"
     },
     contacts:[
-        {}
+        {
+            type:mongoose.Types.ObjectId,
+            ref:"ContactModel"
+        }
     ],
     grpContacts:[
-        {}
+        
+            {
+                type:mongoose.Types.ObjectId,
+                ref:"GrpContactModel"
+            }
+        
     ]
 }, { timestamps: true });
 

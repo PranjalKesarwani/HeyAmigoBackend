@@ -10,11 +10,16 @@ import contactRoutes from "./routes/contactRoutes"
 import grpContactRoutes from "./routes/grpContactRoutes"
 import cors from "cors";
 const app = express();
-app.use(cors({
-    origin: "http://127.0.0.1:5173",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+app.use(cors());
+// app.use(cors({
+//     origin: "http://127.0.0.1:5173",
+//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+//     credentials:true, //It enables cookies and authentication headers
+//     optionsSuccessStatus:204, //No content response for preflight requests
+//     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
+    
+// }));
 
-}));
 
 app.use(express.json());
 app.use(cookieParser());

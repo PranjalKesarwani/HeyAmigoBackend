@@ -1,22 +1,20 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 
 const contactSchema = new mongoose.Schema({
     userId: {
-        type: String,
-        required: true
+        type: mongoose.Types.ObjectId,
+        ref:"UserModel",
     },
     you: {
-        type: String,
-        required: true
+        type: mongoose.Types.ObjectId,
+        ref:"UserModel"
     },
     latestMessage: {
-        type: String,
-
+        type: mongoose.Types.ObjectId,
+        ref:"MessageModel"
     },
    
-    allMessages:[{
-
-    }]
+    allMessages:[{type:mongoose.Types.ObjectId,ref:"MessageModel"}]
 }, { timestamps: true });
 
 

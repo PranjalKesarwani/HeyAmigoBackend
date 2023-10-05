@@ -2,22 +2,25 @@ import mongoose from "mongoose";
 
 const grpContactSchema = new mongoose.Schema({
     adminId: {
-        type: String,
-        required: true
+        type: mongoose.Types.ObjectId,
+        ref: "UserModel"
     },
     members: [{
-        type: String,
-        required: true
+        type: mongoose.Types.ObjectId,
+        ref: "UserModel"
     }],
     latestMessage: {
-        type: String,
+        type: mongoose.Types.ObjectId,
+        ref: "MessageModel"
     },
 
     allMessages: [{
-
+        type: mongoose.Types.ObjectId,
+        ref: "MessageModel"
     }],
     grpPic: {
-        type: String
+        type: String,
+        default:"https://img.freepik.com/premium-vector/account-icon-user-icon-vector-graphics_292645-552.jpg"
     }
 }, { timestamps: true });
 
