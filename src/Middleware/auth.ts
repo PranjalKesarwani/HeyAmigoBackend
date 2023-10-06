@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express"
 import UserModel from "../models/userModel";
 
 
-export const auth = async (req: any, res: Response, next: NextFunction) => {
+const auth = async (req: any, res: Response, next: NextFunction) => {
     const token = req.cookies.jwt;
     //if the request does not have token
     if (!token) {
@@ -12,17 +12,20 @@ export const auth = async (req: any, res: Response, next: NextFunction) => {
 
     const requestedId = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload
 
+
     //Finding userDetails using id
-    const userFile = await UserModel.findById(requestedId);
+    const userFile = await UserModel.findById(requestedId.id);
 
     if (!userFile) {
         res.status(401).send({ isAuthenticated: false });
     }
 
-    req.user = userFile;
+
+    req.user = userFile!._id;
 
     next()
 
-   
+
 }
+export default auth;
 

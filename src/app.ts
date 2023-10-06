@@ -31,6 +31,10 @@ app.listen(PORT, () =>
     console.log(`server listening on port ${PORT}`)
 );
 
+app.get("/api/testing",(req,res)=>{
+    res.send("10");
+})
+
 
 app.use("/api/auth",userRoutes);
 app.use("/api/messageroutes",messageRoutes)
