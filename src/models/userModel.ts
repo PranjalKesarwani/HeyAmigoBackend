@@ -20,14 +20,14 @@ const userSchema = new mongoose.Schema({
     },
     contacts:[
         {
-            type:mongoose.Types.ObjectId,
+            type:mongoose.Schema.Types.ObjectId,
             ref:"ContactModel"
         }
     ],
     grpContacts:[
         
             {
-                type:mongoose.Types.ObjectId,
+                type:mongoose.Schema.Types.ObjectId,
                 ref:"GrpContactModel"
             }
         

@@ -2,7 +2,7 @@ import mongoose, { mongo } from "mongoose";
 
 const messageSchema = new mongoose.Schema({
     senderId: {
-        type: mongoose.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref:"UserModel"
      
     },
@@ -22,6 +22,6 @@ const messageSchema = new mongoose.Schema({
 
 
 
-const MessageModel = mongoose.model("users", messageSchema);
+const MessageModel = mongoose.model("messages", messageSchema);
 
 export default MessageModel

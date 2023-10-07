@@ -2,7 +2,7 @@ import { Response } from "express";
 import UserModel from "../models/userModel";
 import bcrypt from "bcryptjs";
 import { createJwt } from "../config/createToken";
-import jwt, { JwtPayload } from "jsonwebtoken"
+// import jwt, { JwtPayload } from "jsonwebtoken"
 
 
 export const signup = async (req: any, res: Response) => {
@@ -12,7 +12,7 @@ export const signup = async (req: any, res: Response) => {
         const { username, email, password } = req.body;
 
         const isUserExist = await UserModel.findOne({ username: username, email: email });
-        console.log(isUserExist);
+  
         if (!isUserExist) {
             const user = await UserModel.create({
                 username: username,
@@ -122,7 +122,7 @@ export const searchUser =async (req:any,res:Response) => {
             // username:{$regex:regex}
         }
     
-       const allSearchedUser = await UserModel.find(query).select("-_id username email")
+       const allSearchedUser = await UserModel.find(query).select("_id username email")
       
         res.status(200).json(allSearchedUser);
     } catch (error) {

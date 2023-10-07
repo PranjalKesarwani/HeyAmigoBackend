@@ -2,20 +2,20 @@ import mongoose from "mongoose";
 
 const grpContactSchema = new mongoose.Schema({
     adminId: {
-        type: mongoose.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "UserModel"
     },
     members: [{
-        type: mongoose.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "UserModel"
     }],
     latestMessage: {
-        type: mongoose.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "MessageModel"
     },
 
     allMessages: [{
-        type: mongoose.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "MessageModel"
     }],
     grpPic: {
@@ -27,6 +27,6 @@ const grpContactSchema = new mongoose.Schema({
 
 
 
-const GrpContactModel = mongoose.model("users", grpContactSchema);
+const GrpContactModel = mongoose.model("grpContacts", grpContactSchema);
 
 export default GrpContactModel

@@ -37,10 +37,10 @@ app.get("/api/testing",(req,res)=>{
 
 
 app.use("/api/auth",userRoutes);
-app.use("/api/messageroutes",messageRoutes)
-app.use("/api/contactroutes",contactRoutes)
-app.use("/api/grpcontactroutes",grpContactRoutes)
-app.use("/api/mediaroutes",mediaRoutes)
+app.use("/api/message-routes",messageRoutes)
+app.use("/api/contact-routes",contactRoutes)
+app.use("/api/grpcontact-routes",grpContactRoutes)
+app.use("/api/media-routes",mediaRoutes)
 
 
 
