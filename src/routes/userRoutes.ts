@@ -7,6 +7,7 @@ const router = express.Router();
 router.post("/signup",signup);
 router.post("/login",login);
 router.get("/getuserdata",auth,getUserData);
+// router.get("/getuserdata",getUserData);
 router.get("/searchuser",auth,searchUser);
 
 export default router

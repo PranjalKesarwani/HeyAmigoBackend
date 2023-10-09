@@ -2,7 +2,6 @@ import { Response } from "express";
 import UserModel from "../models/userModel";
 import bcrypt from "bcryptjs";
 import { createJwt } from "../config/createToken";
-// import jwt, { JwtPayload } from "jsonwebtoken"
 
 
 export const signup = async (req: any, res: Response) => {
@@ -12,12 +11,13 @@ export const signup = async (req: any, res: Response) => {
         const { username, email, password } = req.body;
 
         const isUserExist = await UserModel.findOne({ username: username, email: email });
-  
+
         if (!isUserExist) {
             const user = await UserModel.create({
                 username: username,
                 email: email,
-                password: password
+                password: password,
+               
             })
             let token = createJwt(user!._id.toString());
             const options = {
@@ -95,39 +95,43 @@ export const getUserData = async (req: any, res: Response) => {
     try {
 
         const userId = req.user._id;
-        const userData = await UserModel.findById(userId).select("username email pic contacts grpContacts _id");
-        
+        const userData = await UserModel.findOne(userId).select("_id username pic email");
 
-        res.status(200).send(userData);
+      
+   
+        console.log(userData);
+
+
+        res.status(200).json(userData);
     } catch (error) {
         console.log(error);
-        res.status(500).json({msg:"Internal server error!"})
+        res.status(500).json({ msg: "Internal server error!" })
     }
 
 
 }
 
-export const searchUser =async (req:any,res:Response) => {
+export const searchUser = async (req: any, res: Response) => {
 
     try {
         const currentUserId = req.user;
-  
-        const regex = new RegExp(`${req.query.search}`,'i')
+
+        const regex = new RegExp(`${req.query.search}`, 'i')
         const query = {
-            _id:{$ne:currentUserId},
-            $or:[
-                {username:{$regex:regex}},
-                {email:{$regex:regex}},
+            _id: { $ne: currentUserId },
+            $or: [
+                { username: { $regex: regex } },
+                { email: { $regex: regex } },
             ]
-            // username:{$regex:regex}
+           
         }
-    
-       const allSearchedUser = await UserModel.find(query).select("_id username email")
-      
+
+        const allSearchedUser = await UserModel.find(query).select("_id username email")
+
         res.status(200).json(allSearchedUser);
     } catch (error) {
         console.log(error);
-        res.status(500).json({msg:"Internal server error"});
+        res.status(500).json({ msg: "Internal server error" });
     }
 
 

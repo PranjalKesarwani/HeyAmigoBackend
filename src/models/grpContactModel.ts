@@ -1,9 +1,14 @@
 import mongoose from "mongoose";
 
-const grpContactSchema = new mongoose.Schema({
+const grpChatSchema = new mongoose.Schema({
     adminId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "UserModel"
+    },
+    grpName: {
+        type: String,
+        trim:true,
+        required:true,
     },
     members: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -14,19 +19,15 @@ const grpContactSchema = new mongoose.Schema({
         ref: "MessageModel"
     },
 
-    allMessages: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "MessageModel"
-    }],
     grpPic: {
         type: String,
-        default:"https://img.freepik.com/premium-vector/account-icon-user-icon-vector-graphics_292645-552.jpg"
+        default: "https://img.freepik.com/premium-vector/account-icon-user-icon-vector-graphics_292645-552.jpg"
     }
 }, { timestamps: true });
 
 
 
 
-const GrpContactModel = mongoose.model("grpContacts", grpContactSchema);
+const GrpContactModel =  mongoose.model("grpChat", grpChatSchema);
 
-export default GrpContactModel
+export default GrpContactModel;
