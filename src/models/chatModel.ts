@@ -10,14 +10,14 @@ const chatSchema = new mongoose.Schema({
         required:true
     },
     users:[
-        {type:mongoose.Schema.Types.ObjectId,ref:"UserModel"}
+        {type:mongoose.Schema.Types.ObjectId,ref:"User"}
     ],
     groupAdmin:{
-        type:mongoose.Schema.Types.ObjectId,ref:"UserModel"
+        type:mongoose.Schema.Types.ObjectId,ref:"User"
     },
     latestMessage: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:"MessageModel"
+        ref:"Message"
     },
    
 }, { timestamps: true });
@@ -25,6 +25,6 @@ const chatSchema = new mongoose.Schema({
 
 
 
-const ChatModel = mongoose.model("chats", chatSchema);
+const Chat = mongoose.model("Chat", chatSchema);
 
-export default ChatModel;
+export default Chat;

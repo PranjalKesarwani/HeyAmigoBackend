@@ -47,7 +47,10 @@ export const getPContacts = async (req: any, res: Response) => {
         const allPContacts = await ChatModel.find({
             isGroupChat: false,
             users: { $elemMatch: { $eq: req.user } }
-        })
+        }).populate({
+            path:'users',
+            select:'_id username email pic'
+        }).select('_id chatName isGroupChat users');
 
          
 

@@ -17,7 +17,7 @@ export const signup = async (req: any, res: Response) => {
                 username: username,
                 email: email,
                 password: password,
-               
+
             })
             let token = createJwt(user!._id.toString());
             const options = {
@@ -90,6 +90,20 @@ export const login = async (req: any, res: Response) => {
 
 }
 
+export const logout = async (req: any, res: Response) => {
+
+    try {
+
+        res.status(200).clearCookie('jwt').json({msg:'Logged out successfully'});
+        res.send('I am logout from backend');
+        
+    } catch (error) {
+        console.log(error);
+    }
+
+
+}
+
 export const getUserData = async (req: any, res: Response) => {
 
     try {
@@ -97,8 +111,8 @@ export const getUserData = async (req: any, res: Response) => {
         const userId = req.user._id;
         const userData = await UserModel.findOne(userId).select("_id username pic email");
 
-      
-   
+
+
         console.log(userData);
 
 
@@ -123,7 +137,7 @@ export const searchUser = async (req: any, res: Response) => {
                 { username: { $regex: regex } },
                 { email: { $regex: regex } },
             ]
-           
+
         }
 
         const allSearchedUser = await UserModel.find(query).select("_id username email")

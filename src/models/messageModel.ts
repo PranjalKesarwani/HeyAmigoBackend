@@ -4,7 +4,7 @@ const messageSchema = new mongoose.Schema({
 
     senderId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "UserModel"
+        ref: "User"
 
     },
     message: {
@@ -19,7 +19,7 @@ const messageSchema = new mongoose.Schema({
     },
     chatId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:"chatModel",
+        ref:"Chat",
         required: true
     }
 
@@ -28,6 +28,6 @@ const messageSchema = new mongoose.Schema({
 
 
 
-const MessageModel = mongoose.model("messages", messageSchema);
+const Message = mongoose.model("Message", messageSchema);
 
-export default MessageModel;
+export default Message;
