@@ -19,17 +19,20 @@ export const createChat = async (req: any, res: Response) => {
 
             ]
         });
-        console.log(isChatExist);
+   
         if (isChatExist) {
-            res.status(200).json({ msg: 'Chat already exist!' });
+            const populatedChatData = await isChatExist.populate('users','-password');
+       
+            res.status(200).json(populatedChatData);
 
         } else {
             const chat = await ChatModel.create({
                 chatName: username,
                 isGroupChat: isGroupChat,
                 users: [userId, otherPId],
-            })
-            res.status(201).send(chat);
+            });
+            const populatedChatData = await chat.populate('users','-password');
+            res.status(201).send(populatedChatData);
         }
 
 
@@ -54,7 +57,7 @@ export const getPContacts = async (req: any, res: Response) => {
 
          
 
-        console.log(allPContacts)
+      
 
         res.status(200).json(allPContacts);
     } catch (error) {
