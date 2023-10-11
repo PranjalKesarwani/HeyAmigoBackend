@@ -95,7 +95,6 @@ export const logout = async (req: any, res: Response) => {
     try {
 
         res.status(200).clearCookie('jwt').json({msg:'Logged out successfully'});
-        res.send('I am logout from backend');
         
     } catch (error) {
         console.log(error);
@@ -113,7 +112,7 @@ export const getUserData = async (req: any, res: Response) => {
 
 
 
-        console.log(userData);
+     
 
 
         res.status(200).json(userData);

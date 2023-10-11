@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser"
 import userRoutes from "./routes/userRoutes"
 import messageRoutes from "./routes/messageRoutes"
 import chatRoutes from "./routes/chatRoutes"
-import grpContactRoutes from "./routes/grpContactRoutes"
+import grpChatRoutes from "./routes/grpChatRoutes"
 import cors from "cors";
 const app = express();
 app.use(cors());
@@ -38,7 +38,7 @@ app.get("/api/testing",(req,res)=>{
 app.use("/api/auth",userRoutes);
 app.use("/api/message-routes",messageRoutes)
 app.use("/api/chat-routes",chatRoutes)
-// app.use("/api/grpcontact-routes",grpContactRoutes)
+app.use("/api/grpcontact-routes",grpChatRoutes)
 
 
 
