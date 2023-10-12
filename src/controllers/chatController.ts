@@ -19,19 +19,36 @@ export const createChat = async (req: any, res: Response) => {
 
             ]
         });
-   
+
         if (isChatExist) {
-            const populatedChatData = await isChatExist.populate('users','-password');
-       
-            res.status(200).json(populatedChatData);
+            // const populatedChatData = await isChatExist.populate('users', '-password');
+            const TpopulatedChatData = await isChatExist.populate([
+                {
+                    path: 'users',
+                    select: '_id, username email pic'
+                },
+                {
+                    path: 'latestMessage',
+                    select: '-updatedAt',
+                    populate: {
+                        path: 'senderId',
+                        select: '_id username email pic'
+                    }
+                }
+            ]);
+
+            console.log(TpopulatedChatData);
+
+            res.status(200).json(TpopulatedChatData);
 
         } else {
             const chat = await ChatModel.create({
                 chatName: username,
                 isGroupChat: isGroupChat,
                 users: [userId, otherPId],
+                latestMessage: null,
             });
-            const populatedChatData = await chat.populate('users','-password');
+            const populatedChatData = await chat.populate('users', '-password');
             res.status(201).send(populatedChatData);
         }
 
@@ -47,19 +64,40 @@ export const createChat = async (req: any, res: Response) => {
 export const getPContacts = async (req: any, res: Response) => {
 
     try {
-        const allPContacts = await ChatModel.find({
+        // const allPContacts = await ChatModel.find({
+        //     isGroupChat: false,
+        //     users: { $elemMatch: { $eq: req.user } }
+        // }).populate([
+        //     {
+        //         path: 'users',
+        //         select: '_id username email pic'
+        //     }
+        // ]).select('_id chatName isGroupChat users latestMessage');
+
+        const TallPContacts = await ChatModel.find({
             isGroupChat: false,
             users: { $elemMatch: { $eq: req.user } }
-        }).populate({
-            path:'users',
-            select:'_id username email pic'
-        }).select('_id chatName isGroupChat users');
+        }).populate([
+            {
+                path: 'users',
+                select: '_id username email pic'
+            },{
+                path:'latestMessage',
+                populate:{
+                    path:'senderId',
+                    select:'_id username email pic'
 
-         
+                }
+            }
+        ]).select('_id chatName isGroupChat users latestMessage');
 
-      
+        console.log('--',TallPContacts)
 
-        res.status(200).json(allPContacts);
+
+
+
+
+        res.status(200).json(TallPContacts);
     } catch (error) {
         console.log(error);
         res.status(500).json({ msg: 'Internal server error!' });

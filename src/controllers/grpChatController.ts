@@ -51,6 +51,22 @@ export const getGrpContacts = async (req: any, res: Response) => {
 
         const userId = req.user;
 
+        // const allGContacts = await Chat.find({
+        //     isGroupChat:true,
+        //     users:{$elemMatch :{$eq:req.user}}
+        // })
+        // .populate([
+        //     {
+        //         path: 'users',
+        //         select: '-password -updatedAt -createdAt'
+        //     },
+        //     {
+        //         path:'groupAdmin',
+        //         select:'-password -updatedAt -createdAt'
+        //     }
+
+        // ]).populate('latestMessage','-updatedAt').select('-updatedAt');
+
         const allGContacts = await Chat.find({
             isGroupChat:true,
             users:{$elemMatch :{$eq:req.user}}
@@ -63,9 +79,19 @@ export const getGrpContacts = async (req: any, res: Response) => {
             {
                 path:'groupAdmin',
                 select:'-password -updatedAt -createdAt'
+            },
+            {
+                path:'latestMessage',
+                
+                populate:{
+                    path:'senderId',
+                    select:'-createdAt -updatedAt -password'
+                }
             }
 
-        ]).populate('latestMessage','-updatedAt').select('-updatedAt');
+        ]).select('-updatedAt');
+
+        // console.log(TestallGContacts[0].latestMessage!);
 
 
         res.status(200).json(allGContacts)
