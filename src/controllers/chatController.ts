@@ -22,7 +22,7 @@ export const createChat = async (req: any, res: Response) => {
 
         if (isChatExist) {
             // const populatedChatData = await isChatExist.populate('users', '-password');
-            const TpopulatedChatData = await isChatExist.populate([
+            const populatedChatData = await isChatExist.populate([
                 {
                     path: 'users',
                     select: '_id, username email pic'
@@ -37,9 +37,8 @@ export const createChat = async (req: any, res: Response) => {
                 }
             ]);
 
-            console.log(TpopulatedChatData);
 
-            res.status(200).json(TpopulatedChatData);
+            res.status(200).json(populatedChatData);
 
         } else {
             const chat = await ChatModel.create({
@@ -91,7 +90,6 @@ export const getPContacts = async (req: any, res: Response) => {
             }
         ]).select('_id chatName isGroupChat users latestMessage');
 
-        console.log('--',TallPContacts)
 
 
 
