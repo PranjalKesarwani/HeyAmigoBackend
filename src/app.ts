@@ -50,33 +50,20 @@ app.use("/api/grpcontact-routes", grpChatRoutes)
 
 io.on('connection', async(socket) => {
     console.log(`Socket ${socket.id} connect`);
-    socket.on("setup",(userData)=>{
-        socket.join(userData._id); //created room for userId;
-        socket.emit('connected');
-    });
+  
+
+    socket.on('createRoom',(data)=>{
+        socket.join(data.chatId);
+        socket.emit('createdRoom')
+    })
 
     socket.on('join-room',(data)=>{
         socket.join(data.chatId);
-        socket.in(data.chatId).emit('sent','working');
         socket.emit('chatRoom')
+        io.in(data.chatId).emit('sent','working');
         console.log('chat room created');
     });
-    // socket.on('roomMsg',(msgData)=>{
-    //     console.log(msgData);
-    //     socket.in(msgData.chatId).emit('room-msg',{msg:msgData.message})
-    // })
 
-
-
-    socket.on('message sent',(sentMessage)=>{
-        console.log(sentMessage);
-        sentMessage.users.forEach((userInfo:any) => {
-            if(sentMessage.senderId === userInfo._id) {return ;}
-            socket.in(userInfo._id).emit('message received',{message:sentMessage.message})
-        });
-    })
-
-   
 
   socket.on('disconnect',()=>{
     console.log(`Socket ${socket.id} disconnected!`)
