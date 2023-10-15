@@ -63,17 +63,9 @@ export const createChat = async (req: any, res: Response) => {
 export const getPContacts = async (req: any, res: Response) => {
 
     try {
-        // const allPContacts = await ChatModel.find({
-        //     isGroupChat: false,
-        //     users: { $elemMatch: { $eq: req.user } }
-        // }).populate([
-        //     {
-        //         path: 'users',
-        //         select: '_id username email pic'
-        //     }
-        // ]).select('_id chatName isGroupChat users latestMessage');
+       
 
-        const TallPContacts = await ChatModel.find({
+        const allPContacts = await ChatModel.find({
             isGroupChat: false,
             users: { $elemMatch: { $eq: req.user } }
         }).populate([
@@ -88,14 +80,14 @@ export const getPContacts = async (req: any, res: Response) => {
 
                 }
             }
-        ]).select('_id chatName isGroupChat users latestMessage');
+        ]).select('_id chatName isGroupChat users latestMessage').sort({updatedAt:-1});
 
 
 
 
 
 
-        res.status(200).json(TallPContacts);
+        res.status(200).json(allPContacts);
     } catch (error) {
         console.log(error);
         res.status(500).json({ msg: 'Internal server error!' });

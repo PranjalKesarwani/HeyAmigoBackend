@@ -86,12 +86,31 @@ export const fetchAllMessages = async (req: any, res: any) => {
 
 }
 
-export const imgUploader = async (req: Request, res: Response) => {
+export const imgUploader = async (req: any, res: Response) => {
 
-    // console.log(req.body);
-    // v2.uploader.upload(req.body,{upload_preset: "myChatApp"},(err,result)=>{
-    //         result ? console.log(result) : console.log(err);
-    // })
+    try {
+        
+    const {message,messageType,chatId} = req.body;
+    const userId = req.user;
 
-    res.json(req.body);
+    const createMsg = await Message.create({
+        senderId: userId,
+        message: message,
+        messageType: messageType,
+        chatId: chatId
+    });
+
+    if (createMsg) {
+        const chatDoc = await Chat.findById(chatId);
+        chatDoc!.latestMessage = createMsg._id;
+        await chatDoc!.save();
+
+    }
+
+    res.status(201).json(createMsg);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg:'Server Error! Message not sent!'})
+    }
+
 }
