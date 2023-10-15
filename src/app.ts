@@ -8,7 +8,7 @@ import chatRoutes from "./routes/chatRoutes"
 import grpChatRoutes from "./routes/grpChatRoutes"
 import cors from "cors";
 import { Server } from "socket.io";
-
+import { v2 } from "cloudinary";
 
 import { createServer } from 'node:http';
 const app = express();
@@ -19,6 +19,12 @@ const io = new Server(server,{
         origin:"*"
     }
 });
+
+v2.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET,
+  });
 
 // app.use(cors({
 //     origin: "http://127.0.0.1:5173",
