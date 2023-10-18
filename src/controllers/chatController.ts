@@ -46,6 +46,7 @@ export const createChat = async (req: any, res: Response) => {
                 isGroupChat: isGroupChat,
                 users: [userId, otherPId],
                 latestMessage: null,
+               
             });
             const populatedChatData = await chat.populate('users', '-password');
             res.status(201).send(populatedChatData);

@@ -18,8 +18,7 @@ const chatSchema = new mongoose.Schema({
     latestMessage: {
         type: mongoose.Schema.Types.ObjectId,
         ref:"Message",
-        
-    },
+    }
    
 }, { timestamps: true });
 
