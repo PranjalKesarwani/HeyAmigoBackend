@@ -69,8 +69,7 @@ export const createGrpMessage = async (req: any, res: any) => {
 export const fetchAllMessages = async (req: any, res: any) => {
 
     const chatId = req.params.chatId;
-
-
+   
 
     try {
 
