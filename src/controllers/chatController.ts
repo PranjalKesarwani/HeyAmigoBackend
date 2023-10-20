@@ -65,7 +65,6 @@ export const getPContacts = async (req: any, res: Response) => {
 
     try {
        
-
         const allPContacts = await ChatModel.find({
             isGroupChat: false,
             users: { $elemMatch: { $eq: req.user } }

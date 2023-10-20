@@ -11,12 +11,13 @@ import { Server } from "socket.io";
 import { v2 } from "cloudinary";
 
 import { createServer } from 'node:http';
+import { type } from "node:os";
 const app = express();
 const server = createServer(app);
 app.use(cors());
-const io = new Server(server,{
-    cors:{
-        origin:"*"
+const io = new Server(server, {
+    cors: {
+        origin: "*"
     }
 });
 
@@ -24,7 +25,7 @@ v2.config({
     cloud_name: process.env.CLOUD_NAME,
     api_key: process.env.API_KEY,
     api_secret: process.env.API_SECRET,
-  });
+});
 
 // app.use(cors({
 //     origin: "http://127.0.0.1:5173",
@@ -54,26 +55,49 @@ app.use("/api/grpcontact-routes", grpChatRoutes)
 
 // Socket-------------------------s
 
-io.on('connection', async(socket) => {
-    console.log(`Socket ${socket.id} connect`);
-  
 
-    socket.on('createRoom',(data)=>{
-        socket.join(data.chatId);
-        socket.emit('createdRoom')
+// types------------------------------------
+type TUser = {
+    _id:string;
+    email:string;
+    username:string;
+    pic:string
+}
+
+type TArgsendInUserRoom = {
+    userId:string,
+    usersArray:TUser[];
+}
+// types------------------------------------
+
+io.on('connection', async (socket) => {
+    console.log(`Socket ${socket.id} connect`);
+
+    //Creating room using userId
+    socket.on('createUserRoom', (userInfo:{userId:string}) => {
+        console.log(userInfo.userId);
+        socket.join(userInfo.userId);
+        socket.emit('createdUserRoom');
+    })
+    socket.on('sentMsgInUserRoom',(data:TArgsendInUserRoom)=>{
+        console.log(data);
+        if (!data.usersArray) {
+            return console.log('Error in users array');
+        }
+        
+        data.usersArray.forEach((element:TUser) => {
+
+            if(data.userId === element._id) return;
+   
+            socket.in(element._id).emit('receivedMsg');
+        });
+
+
     })
 
-    socket.on('join-room',(data)=>{
-        socket.join(data.chatId);
-        socket.emit('chatRoom')
-        io.in(data.chatId).emit('sent','working');
-        console.log('chat room created');
-    });
-
-
-  socket.on('disconnect',()=>{
-    console.log(`Socket ${socket.id} disconnected!`)
-  })
+    socket.on('disconnect', () => {
+        console.log(`Socket ${socket.id} disconnected!`)
+    })
 
 })
 
