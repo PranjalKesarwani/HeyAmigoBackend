@@ -17,7 +17,7 @@ const auth = async (req: any, res: Response, next: NextFunction) => {
     const userFile = await UserModel.findById(requestedId.id);
 
     if (!userFile) {
-        res.status(401).send({ isAuthenticated: false });
+        res.status(401).json({ isAuthenticated: false });
     }
 
 
