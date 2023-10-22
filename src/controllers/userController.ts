@@ -2,6 +2,7 @@ import { Response } from "express";
 import UserModel from "../models/userModel";
 import bcrypt from "bcryptjs";
 import { createJwt } from "../config/createToken";
+import User from "../models/userModel";
 
 
 export const signup = async (req: any, res: Response) => {
@@ -148,4 +149,23 @@ export const searchUser = async (req: any, res: Response) => {
     }
 
 
+}
+
+export const uploadUserPic = async(req:any,res:Response)=>{
+
+    try {
+        const {imgUrl} = req.body;
+        const userId = req.user;
+    
+        const userDoc = await UserModel.findByIdAndUpdate(userId,{pic:imgUrl});
+        console.log(userDoc);
+    
+    
+        res.status(200).json({msg:'success'});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg:"Internal server error"});
+    }
+
+   
 }
