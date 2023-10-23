@@ -7,7 +7,6 @@ import User from "../models/userModel";
 
 export const signup = async (req: any, res: Response) => {
 
-
     try {
         const { username, email, password } = req.body;
 
@@ -22,7 +21,7 @@ export const signup = async (req: any, res: Response) => {
             })
             let token = createJwt(user!._id.toString());
             const options = {
-                expiresIn: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+                expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
 
                 httpOnly: true
             }
@@ -44,7 +43,6 @@ export const signup = async (req: any, res: Response) => {
 }
 export const login = async (req: any, res: Response) => {
 
-
     const { email, password } = req.body;
     const user = await UserModel.findOne({ email: email });
 
@@ -62,13 +60,11 @@ export const login = async (req: any, res: Response) => {
 
                     let token = createJwt(user!._id.toString());
                     const options = {
-                        expiresIn: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+                        expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
                         httpOnly: true
                     }
 
                     res.status(200).cookie("jwt", token, options).json({ isAuthenticated: true, msg: "Log In successful!" });
-
-
 
                 } else {
                     res.status(406).send("Password do not match")
@@ -79,15 +75,6 @@ export const login = async (req: any, res: Response) => {
         console.log(error);
         res.status(500).json({ err: "Internal server error! Try again." })
     }
-
-
-
-
-
-
-
-
-
 
 }
 
