@@ -46,7 +46,6 @@ export const createGrpMessage = async (req: any, res: any) => {
 
 
         await createGrpMsg.populate('senderId', '_id username email pic');
-        console.log(createGrpMsg);
 
 
 

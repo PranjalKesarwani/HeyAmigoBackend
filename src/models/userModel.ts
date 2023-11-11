@@ -23,11 +23,15 @@ const userSchema = new mongoose.Schema({
     
 }, { timestamps: true });
 
+userSchema.index({username:1});
+
 userSchema.methods.matchPassword = async function (candidatePassword: string) {
     return await bcrypt.compare(candidatePassword, this.password)
 }
 
 userSchema.pre("save", async function (next) {
+
+    //If user wanted to reset his password then findOneAndUpdate krna hoga toh uss situation me isModified true ho jayega so else me ayega and new password ko bhi hash kr dega
     if (!this.isModified('password')) {
         next();
     } else {

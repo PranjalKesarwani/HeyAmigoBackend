@@ -91,11 +91,9 @@ export const updateGrpChatInfo = async (req: any, res: Response) => {
     try {
 
         const chatId = req.params.chatId;
-        console.log(chatId);
 
 
         const { allUsers, grpName } = req.body;
-        console.log(allUsers);
         const allUsersIds = JSON.parse(allUsers);
 
 
@@ -119,7 +117,6 @@ export const updateGrpChatInfo = async (req: any, res: Response) => {
             }
 
         ]);
-        console.log(updatedChatDoc);
 
 
         res.status(200).json(updatedChatDoc);

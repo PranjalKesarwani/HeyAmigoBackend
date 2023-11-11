@@ -7,7 +7,7 @@ const auth = async (req: any, res: Response, next: NextFunction) => {
     const token = req.cookies.jwt;
     //if the request does not have token
     if (!token) {
-        res.status(401).json({ isAuthenticated: false });
+      return  res.status(401).json({ isAuthenticated: false });
     }
 
     const requestedId = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload
@@ -17,7 +17,7 @@ const auth = async (req: any, res: Response, next: NextFunction) => {
     const userFile = await UserModel.findById(requestedId.id);
 
     if (!userFile) {
-        res.status(401).json({ isAuthenticated: false });
+      return  res.status(401).json({ isAuthenticated: false });
     }
 
 

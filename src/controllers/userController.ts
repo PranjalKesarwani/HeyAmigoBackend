@@ -8,8 +8,8 @@ import User from "../models/userModel";
 export const signup = async (req: any, res: Response) => {
 
     try {
+        
         const { username, email, password } = req.body;
-
         const isUserExist = await UserModel.findOne({ username: username, email: email });
 
         if (!isUserExist) {
@@ -145,7 +145,6 @@ export const uploadUserPic = async(req:any,res:Response)=>{
         const userId = req.user;
     
         const userDoc = await UserModel.findByIdAndUpdate(userId,{pic:imgUrl});
-        console.log(userDoc);
     
     
         res.status(200).json({msg:'success'});
@@ -156,3 +155,13 @@ export const uploadUserPic = async(req:any,res:Response)=>{
 
    
 }
+
+// export const checkAuth = async(req:any,res:Response)=>{
+
+//     try {
+        
+//         res.status(200).json({isAuthenticated:true});
+//     } catch (error) {
+//         res.status(500).json({msg:"Internal server error!"});
+//     }
+// }

@@ -12,10 +12,12 @@ import { v2 } from "cloudinary";
 
 import { createServer } from 'node:http';
 import { type } from "node:os";
+import User from "./models/userModel";
 const app = express();
 const server = createServer(app);
 app.use(cors());
 const io = new Server(server, {
+    pingTimeout: 60000,
     cors: {
         origin: "*"
     }
@@ -48,6 +50,10 @@ server.listen(PORT, () =>
 
 app.use(express.json());
 app.use(cookieParser());
+app.get('/', async (req, res) => {
+    const doc = await User.find({ username: 'e' });
+    res.json(doc);
+})
 app.use("/api/auth", userRoutes);
 app.use("/api/message-routes", messageRoutes)
 app.use("/api/chat-routes", chatRoutes)
@@ -58,38 +64,51 @@ app.use("/api/grpcontact-routes", grpChatRoutes)
 
 // types------------------------------------
 type TUser = {
-    _id:string;
-    email:string;
-    username:string;
-    pic:string
+    _id: string;
+    email: string;
+    username: string;
+    pic: string
 }
 
 type TArgsendInUserRoom = {
-    userId:string,
-    usersArray:TUser[];
+    userId: string,
+    usersArray: TUser[];
 }
 // types------------------------------------
 
 io.on('connection', async (socket) => {
-    console.log(`Socket ${socket.id} connect`);
+    console.log(`Socket ${socket.id} connected`);
 
     //Creating room using userId
-    socket.on('createUserRoom', (userInfo:{userId:string}) => {
-        console.log(userInfo.userId);
+    socket.on('createUserRoom', (userInfo: { userId: string }) => {
         socket.join(userInfo.userId);
         socket.emit('createdUserRoom');
-    })
-    socket.on('sentMsgInUserRoom',(data:TArgsendInUserRoom)=>{
-        console.log(data);
+    });
+    socket.on('sentMsgInUserRoom', (data: TArgsendInUserRoom) => {
         if (!data.usersArray) {
             return console.log('Error in users array');
         }
-        
-        data.usersArray.forEach((element:TUser) => {
 
-            if(data.userId === element._id) return;
-   
+        data.usersArray.forEach((element: TUser) => {
+
+            if (data.userId === element._id) return;
+
             socket.in(element._id).emit('receivedMsg');
+        });
+
+
+    })
+
+    socket.on('sentMsgInUserRoomForG', (data: TArgsendInUserRoom) => {
+        if (!data.usersArray) {
+            return console.log('Error in users array');
+        }
+
+        data.usersArray.forEach((element: TUser) => {
+
+            if (data.userId === element._id) return;
+
+            socket.in(element._id).emit('receivedMsgForG');
         });
 
 
