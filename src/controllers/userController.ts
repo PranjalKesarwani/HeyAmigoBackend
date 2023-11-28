@@ -8,7 +8,7 @@ import User from "../models/userModel";
 export const signup = async (req: any, res: Response) => {
 
     try {
-        
+
         const { username, email, password } = req.body;
         const isUserExist = await UserModel.findOne({ username: username, email: email });
 
@@ -82,8 +82,8 @@ export const logout = async (req: any, res: Response) => {
 
     try {
 
-        res.status(200).clearCookie('jwt').json({msg:'Logged out successfully'});
-        
+        res.status(200).clearCookie('jwt').json({ msg: 'Logged out successfully' });
+
     } catch (error) {
         console.log(error);
     }
@@ -100,7 +100,7 @@ export const getUserData = async (req: any, res: Response) => {
 
 
 
-     
+
 
 
         res.status(200).json(userData);
@@ -138,30 +138,61 @@ export const searchUser = async (req: any, res: Response) => {
 
 }
 
-export const uploadUserPic = async(req:any,res:Response)=>{
+export const uploadUserPic = async (req: any, res: Response) => {
 
     try {
-        const {imgUrl} = req.body;
+        const { imgUrl } = req.body;
         const userId = req.user;
-    
-        const userDoc = await UserModel.findByIdAndUpdate(userId,{pic:imgUrl});
-    
-    
-        res.status(200).json({msg:'success'});
+
+        const userDoc = await UserModel.findByIdAndUpdate(userId, { pic: imgUrl });
+
+
+        res.status(200).json({ msg: 'success' });
     } catch (error) {
         console.log(error);
-        res.status(500).json({msg:"Internal server error"});
+        res.status(500).json({ msg: "Internal server error" });
     }
 
-   
+
 }
 
-// export const checkAuth = async(req:any,res:Response)=>{
+export const registerGuest = async (req: any, res: Response) => {
 
-//     try {
-        
-//         res.status(200).json({isAuthenticated:true});
-//     } catch (error) {
-//         res.status(500).json({msg:"Internal server error!"});
-//     }
-// }
+    try {
+
+        const { username, email, password } = req.body;
+        const isUserExist = await UserModel.findOne({ username: username, email: email });
+
+        if (!isUserExist) {
+            const user = await UserModel.create({
+                username: username,
+                email: email,
+                password: password,
+
+            })
+            let token = createJwt(user!._id.toString());
+            const options = {
+                expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+                httpOnly: true
+            }
+
+            res.status(201).cookie("jwt", token, options).json({ isAuthenticated: true, msg: "Sign Up successful!" });
+        } else {
+
+
+
+            let token = createJwt(isUserExist._id.toString());
+            const options = {
+                expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+                httpOnly: true
+            }
+            res.status(200).cookie('jwt',token, options).json({ isAuthenticated: true, msg: "Login Successful!" })
+        }
+
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Internal server error! Try again." })
+    }
+}

@@ -76,7 +76,6 @@ export const getGrpContacts = async (req: any, res: Response) => {
 
             ]).select('-updatedAt');
 
-        // console.log(TestallGContacts[0].latestMessage!);
 
 
         res.status(200).json(allGContacts)
