@@ -96,3 +96,10 @@ export const getPContacts = async (req: any, res: Response) => {
 
 
 }
+
+export const set_notification = async (req:any,res:Response)=>{
+    const {chatId} = req.body;
+    const userId = req.user;
+    console.log('--',chatId);
+    res.status(201).json('i am listening');
+}
