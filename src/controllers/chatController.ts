@@ -11,14 +11,17 @@ export const createChat = async (req: any, res: Response) => {
 
         //User searched in one-on-one chat, clicked on any one, now the data will come here, and check if the chat is not created, then it will create, and if chat is already present then it will do nothing
 
+        console.log('hello world')
+
         const isChatExist = await ChatModel.findOne({
             isGroupChat: false,
             $and: [
-                { users: { $elemMatch: { $eq: userId, } } },   //users array me hote hai elements isliye uske elements me check kr rahe, koi element toh hoga, jiski id userId se match kr rahi hogi
-                { users: { $elemMatch: { $eq: otherPId, } } }, //usi oopr wale user array me atleast koi ek element toh hoga jo otherPId ke barabar ho
+                { 'users.personInfo': userId },   //users array me hote hai elements isliye uske elements me check kr rahe, koi element toh hoga, jiski id userId se match kr rahi hogi
+                { 'users.personInfo': otherPId }, //usi oopr wale user array me atleast koi ek element toh hoga jo otherPId ke barabar ho
 
             ]
         });
+        console.log(isChatExist);
 
         if (isChatExist) {
             // const populatedChatData = await isChatExist.populate('users', '-password');
@@ -37,18 +40,26 @@ export const createChat = async (req: any, res: Response) => {
                 }
             ]);
 
+            
+
 
             res.status(200).json(populatedChatData);
 
         } else {
+            console.log('inside else condition');
             const chat = await ChatModel.create({
                 chatName: username,
                 isGroupChat: isGroupChat,
-                users: [userId, otherPId],
+                users: [
+                    { personInfo: userId, messageCount: 0 },
+                    { personInfo: otherPId, messageCount: 0 }
+                ],
+                // users: [userId, otherPId],
                 latestMessage: null,
-               
+
             });
-            const populatedChatData = await chat.populate('users', '-password');
+            const populatedChatData = await chat.populate('users.personInfo', '-password');
+            console.log(populatedChatData);
             res.status(201).send(populatedChatData);
         }
 
@@ -64,23 +75,25 @@ export const createChat = async (req: any, res: Response) => {
 export const getPContacts = async (req: any, res: Response) => {
 
     try {
-       
+
         const allPContacts = await ChatModel.find({
             isGroupChat: false,
-            users: { $elemMatch: { $eq: req.user } }
+            'users.personInfo': req.user 
         }).populate([
             {
-                path: 'users',
+                path: 'users.personInfo',
                 select: '_id username email pic'
-            },{
-                path:'latestMessage',
-                populate:{
-                    path:'senderId',
-                    select:'_id username email pic'
+            }, {
+                path: 'latestMessage',
+                populate: {
+                    path: 'senderId',
+                    select: '_id username email pic'
 
                 }
             }
-        ]).select('_id chatName isGroupChat users latestMessage').sort({updatedAt:-1});
+        ]).select('_id chatName isGroupChat users latestMessage').sort({ updatedAt: -1 });
+
+        console.log('--',allPContacts);
 
 
 
@@ -97,9 +110,9 @@ export const getPContacts = async (req: any, res: Response) => {
 
 }
 
-export const set_notification = async (req:any,res:Response)=>{
-    const {chatId} = req.body;
+export const set_notification = async (req: any, res: Response) => {
+    const { chatId } = req.body;
     const userId = req.user;
-    console.log('--',chatId);
+    console.log('--', chatId);
     res.status(201).json('i am listening');
 }
