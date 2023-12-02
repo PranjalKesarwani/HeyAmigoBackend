@@ -1,6 +1,5 @@
 import { Response } from "express";
 import Chat from "../models/chatModel";
-const objectId = require('mongodb').ObjectID;
 
 export const grpChatCreator = async (req: any, res: Response) => {
 
@@ -12,19 +11,27 @@ export const grpChatCreator = async (req: any, res: Response) => {
         const userId = req.user;
         allUsersId.push(userId);
 
+        const gUsersArray = allUsersId.map((id: string) => {
+            return ({
+                personInfo: id,
+                messageCount: 0
+            })
+        })
+
         const createGChat = await Chat.create({
             chatName: grpName,
             isGroupChat: true,
-            users: allUsersId,
+            users: gUsersArray,
             groupAdmin: userId,
             latestMessage: null
         });
+        console.log(createGChat);
 
 
 
         const populatedGChat = await createGChat.populate([
             {
-                path: 'users',
+                path: 'users.personInfo',
                 select: '-password -updatedAt -createdAt'
             },
             {
@@ -54,11 +61,11 @@ export const getGrpContacts = async (req: any, res: Response) => {
 
         const allGContacts = await Chat.find({
             isGroupChat: true,
-            users: { $elemMatch: { $eq: req.user } }
+            'users.personInfo': req.user
         })
             .populate([
                 {
-                    path: 'users',
+                    path: 'users.personInfo',
                     select: '-password -updatedAt -createdAt'
                 },
                 {
@@ -76,7 +83,7 @@ export const getGrpContacts = async (req: any, res: Response) => {
 
             ]).select('-updatedAt');
 
-
+        console.log(allGContacts);
 
         res.status(200).json(allGContacts)
     } catch (error) {
@@ -85,6 +92,7 @@ export const getGrpContacts = async (req: any, res: Response) => {
     }
 }
 
+//--------It will not work currently, as users have been changed but here modifications not done
 export const updateGrpChatInfo = async (req: any, res: Response) => {
 
     try {

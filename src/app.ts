@@ -110,7 +110,7 @@ io.on('connection', async (socket) => {
 
             if (data.userId === element._id) return;
 
-            socket.in(element._id).emit('receivedMsgForG');
+            socket.in(element._id).emit('receivedMsgForG',{chatId:data.chatId,msgId:data.msgId});
         });
 
 
