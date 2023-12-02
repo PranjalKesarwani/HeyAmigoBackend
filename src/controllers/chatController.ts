@@ -40,7 +40,7 @@ export const createChat = async (req: any, res: Response) => {
                 }
             ]);
 
-            
+
 
 
             res.status(200).json(populatedChatData);
@@ -59,7 +59,6 @@ export const createChat = async (req: any, res: Response) => {
 
             });
             const populatedChatData = await chat.populate('users.personInfo', '-password');
-            console.log(populatedChatData);
             res.status(201).send(populatedChatData);
         }
 
@@ -78,7 +77,7 @@ export const getPContacts = async (req: any, res: Response) => {
 
         const allPContacts = await ChatModel.find({
             isGroupChat: false,
-            'users.personInfo': req.user 
+            'users.personInfo': req.user
         }).populate([
             {
                 path: 'users.personInfo',
@@ -93,13 +92,6 @@ export const getPContacts = async (req: any, res: Response) => {
             }
         ]).select('_id chatName isGroupChat users latestMessage').sort({ updatedAt: -1 });
 
-        console.log('--',allPContacts);
-
-
-
-
-
-
         res.status(200).json(allPContacts);
     } catch (error) {
         console.log(error);
@@ -111,8 +103,75 @@ export const getPContacts = async (req: any, res: Response) => {
 }
 
 export const set_notification = async (req: any, res: Response) => {
-    const { chatId } = req.body;
+    const { chatId, msgId } = req.body;
     const userId = req.user;
     console.log('--', chatId);
-    res.status(201).json('i am listening');
+
+    try {
+
+        const findDoc = await ChatModel.findById(chatId);
+
+
+        if (!findDoc) {
+            res.status(404).json({ msg: 'chat not found' });
+            return;
+        }
+        console.log(userId)
+        const userIndex = findDoc?.users.findIndex(user => { console.log(user.personInfo); return user.personInfo?.toString() === userId.toString() });
+        console.log(userIndex);
+
+        if (userIndex === -1) {
+            res.status(404).json({ msg: 'User not found' });
+            return;
+        }
+
+        findDoc!.users[userIndex!].messageCount++;
+        await findDoc?.save();
+
+        console.log(findDoc);
+
+
+        res.status(201).json('i am listening');
+    } catch (error) {
+        res.status(500).json({ msg: 'Internal Server error!' });
+    }
+
+
+
+}
+
+
+export const reset_notification = async (req: any, res: Response) => {
+   
+  try {
+
+    const { chatId } = req.body;
+    const userId = req.user;
+
+    const findDoc = await ChatModel.findById(chatId);
+
+    if (!findDoc) {
+        res.status(404).json({ msg: 'chat not found' });
+        return;
+    }
+    console.log(userId)
+    const userIndex = findDoc?.users.findIndex(user => { console.log(user.personInfo); return user.personInfo?.toString() === userId.toString() });
+    console.log(userIndex);
+
+    if (userIndex === -1) {
+        res.status(404).json({ msg: 'User not found' });
+        return;
+    }
+
+    findDoc!.users[userIndex!].messageCount=0;
+    await findDoc?.save();
+
+    console.log(findDoc);
+
+    res.status(200).json({msg:true});
+    
+  } catch (error) {
+    res.status(500).json({msg:'Internal Server error!'});
+  }
+
 }

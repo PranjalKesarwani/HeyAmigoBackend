@@ -73,7 +73,8 @@ type TUser = {
 type TArgsendInUserRoom = {
     userId: string,
     usersArray: TUser[];
-    chatId:string
+    chatId:string,
+    msgId:string
 }
 // types------------------------------------
 
@@ -94,7 +95,7 @@ io.on('connection', async (socket) => {
 
             if (data.userId === element._id) return;
 
-            socket.in(element._id).emit('receivedMsg',data.chatId);
+            socket.in(element._id).emit('receivedMsg',{chatId:data.chatId,msgId:data.msgId,});
         });
 
 
