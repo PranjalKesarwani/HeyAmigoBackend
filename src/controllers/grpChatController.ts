@@ -102,12 +102,21 @@ export const updateGrpChatInfo = async (req: any, res: Response) => {
 
         const { allUsers, grpName } = req.body;
         const allUsersIds = JSON.parse(allUsers);
+        const reqUsersArray = allUsersIds.map((personId:string)=>{
+            return (
+                {
+                    personInfo:personId,
+                    messageCount:0
+                }
+            )
+        })
+
+                console.log(reqUsersArray);
 
 
-
-        const updatedChatDoc = await Chat.findByIdAndUpdate({ _id: chatId }, { chatName: grpName, users: allUsersIds }, { new: true }).populate([
+        const updatedChatDoc = await Chat.findByIdAndUpdate({ _id: chatId }, { chatName: grpName, users: reqUsersArray }, { new: true }).populate([
             {
-                path: 'users',
+                path: 'users.personInfo',
                 select: 'username email pic _id'
             },
             {
@@ -125,6 +134,8 @@ export const updateGrpChatInfo = async (req: any, res: Response) => {
 
         ]);
 
+        console.log(updatedChatDoc)
+        
 
         res.status(200).json(updatedChatDoc);
     } catch (error) {

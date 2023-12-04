@@ -1,5 +1,7 @@
 import { Response } from "express"
 import ChatModel from "../models/chatModel";
+import Message from "../models/messageModel";
+
 
 export const createChat = async (req: any, res: Response) => {
     try {
@@ -173,5 +175,21 @@ export const reset_notification = async (req: any, res: Response) => {
   } catch (error) {
     res.status(500).json({msg:'Internal Server error!'});
   }
+
+}
+
+export const fetch_media = async(req:any,res:Response)=>{
+    try {
+
+        const {chatId} = req.params;
+        console.log(chatId);
+        const allMedia = await Message.find({chatId:chatId,messageType:'image/png'}).sort({createdAt: -1});
+
+        res.status(200).json(allMedia);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg:'Internal server error'});
+        
+    }
 
 }
