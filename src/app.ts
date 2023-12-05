@@ -11,7 +11,6 @@ import { Server } from "socket.io";
 import { v2 } from "cloudinary";
 
 import { createServer } from 'node:http';
-import { type } from "node:os";
 import User from "./models/userModel";
 const app = express();
 const server = createServer(app);
@@ -19,9 +18,15 @@ app.use(cors());
 const io = new Server(server, {
     pingTimeout: 60000,
     cors: {
-        origin: "*"
+        origin: "https://heyamigo.netlify.app/"
     }
 });
+// const io = new Server(server, {
+//     pingTimeout: 60000,
+//     cors: {
+//         origin: "*"
+//     }
+// });
 
 v2.config({
     cloud_name: process.env.CLOUD_NAME,
