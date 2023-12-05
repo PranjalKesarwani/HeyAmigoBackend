@@ -25,7 +25,6 @@ export const grpChatCreator = async (req: any, res: Response) => {
             groupAdmin: userId,
             latestMessage: null
         });
-        console.log(createGChat);
 
 
 
@@ -83,7 +82,6 @@ export const getGrpContacts = async (req: any, res: Response) => {
 
             ]).select('-updatedAt');
 
-        console.log(allGContacts);
 
         res.status(200).json(allGContacts)
     } catch (error) {
@@ -111,7 +109,6 @@ export const updateGrpChatInfo = async (req: any, res: Response) => {
             )
         })
 
-                console.log(reqUsersArray);
 
 
         const updatedChatDoc = await Chat.findByIdAndUpdate({ _id: chatId }, { chatName: grpName, users: reqUsersArray }, { new: true }).populate([
@@ -134,7 +131,6 @@ export const updateGrpChatInfo = async (req: any, res: Response) => {
 
         ]);
 
-        console.log(updatedChatDoc)
         
 
         res.status(200).json(updatedChatDoc);

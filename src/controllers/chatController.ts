@@ -13,7 +13,6 @@ export const createChat = async (req: any, res: Response) => {
 
         //User searched in one-on-one chat, clicked on any one, now the data will come here, and check if the chat is not created, then it will create, and if chat is already present then it will do nothing
 
-        console.log('hello world')
 
         const isChatExist = await ChatModel.findOne({
             isGroupChat: false,
@@ -23,7 +22,6 @@ export const createChat = async (req: any, res: Response) => {
 
             ]
         });
-        console.log(isChatExist);
 
         if (isChatExist) {
             // const populatedChatData = await isChatExist.populate('users', '-password');
@@ -48,7 +46,6 @@ export const createChat = async (req: any, res: Response) => {
             res.status(200).json(populatedChatData);
 
         } else {
-            console.log('inside else condition');
             const chat = await ChatModel.create({
                 chatName: username,
                 isGroupChat: isGroupChat,
@@ -107,7 +104,6 @@ export const getPContacts = async (req: any, res: Response) => {
 export const set_notification = async (req: any, res: Response) => {
     const { chatId, msgId } = req.body;
     const userId = req.user;
-    console.log('--', chatId);
 
     try {
 
@@ -118,9 +114,7 @@ export const set_notification = async (req: any, res: Response) => {
             res.status(404).json({ msg: 'chat not found' });
             return;
         }
-        console.log(userId)
-        const userIndex = findDoc?.users.findIndex(user => { console.log(user.personInfo); return user.personInfo?.toString() === userId.toString() });
-        console.log(userIndex);
+        const userIndex = findDoc?.users.findIndex(user => {  return user.personInfo?.toString() === userId.toString() });
 
         if (userIndex === -1) {
             res.status(404).json({ msg: 'User not found' });
@@ -130,7 +124,6 @@ export const set_notification = async (req: any, res: Response) => {
         findDoc!.users[userIndex!].messageCount++;
         await findDoc?.save();
 
-        console.log(findDoc);
 
 
         res.status(201).json('i am listening');
@@ -156,9 +149,7 @@ export const reset_notification = async (req: any, res: Response) => {
         res.status(404).json({ msg: 'chat not found' });
         return;
     }
-    console.log(userId)
-    const userIndex = findDoc?.users.findIndex(user => { console.log(user.personInfo); return user.personInfo?.toString() === userId.toString() });
-    console.log(userIndex);
+    const userIndex = findDoc?.users.findIndex(user => {  return user.personInfo?.toString() === userId.toString() });
 
     if (userIndex === -1) {
         res.status(404).json({ msg: 'User not found' });
@@ -168,7 +159,6 @@ export const reset_notification = async (req: any, res: Response) => {
     findDoc!.users[userIndex!].messageCount=0;
     await findDoc?.save();
 
-    console.log(findDoc);
 
     res.status(200).json({msg:true});
     
@@ -182,7 +172,6 @@ export const fetch_media = async(req:any,res:Response)=>{
     try {
 
         const {chatId} = req.params;
-        console.log(chatId);
         const allMedia = await Message.find({chatId:chatId,messageType:'image/png'}).sort({createdAt: -1});
 
         res.status(200).json(allMedia);
