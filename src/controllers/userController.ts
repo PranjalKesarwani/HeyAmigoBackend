@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { CookieOptions, Response } from "express";
 import UserModel from "../models/userModel";
 import bcrypt from "bcryptjs";
 import { createJwt } from "../config/createToken";
@@ -22,11 +22,14 @@ export const signup = async (req: any, res: Response) => {
             let token = createJwt(user!._id.toString());
             const options = {
                 expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+                httpOnly: true,
+                sameSite: 'none',
+                secure: true
 
-                httpOnly: true
+
             }
 
-            res.status(201).cookie("jwt", token, options).json({ isAuthenticated: true, msg: "Sign Up successful!" });
+            res.status(201).cookie("jwt", token, options as CookieOptions).json({ isAuthenticated: true, msg: "Sign Up successful!" });
         } else {
             res.status(200).json({ msg: "User already exist!" })
         }
@@ -61,10 +64,13 @@ export const login = async (req: any, res: Response) => {
                     let token = createJwt(user!._id.toString());
                     const options = {
                         expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-                        httpOnly: true
-                    }
+                        httpOnly: true,
+                        sameSite: 'none',
+                        secure: true
+                    };
+                    console.log(token);
 
-                    res.status(200).cookie("jwt", token, options).json({ isAuthenticated: true, msg: "Log In successful!" });
+                    res.status(200).cookie("jwt", token, options as CookieOptions).json({ isAuthenticated: true, msg: "Log In successful!" });
 
                 } else {
                     res.status(406).send("Password do not match")
@@ -92,6 +98,7 @@ export const logout = async (req: any, res: Response) => {
 }
 
 export const getUserData = async (req: any, res: Response) => {
+    console.log('getuserdata');
 
     try {
 
@@ -173,20 +180,25 @@ export const registerGuest = async (req: any, res: Response) => {
             let token = createJwt(user!._id.toString());
             const options = {
                 expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-                httpOnly: true
+                httpOnly: true,
+                sameSite: 'none',
+                secure: true
             }
 
-            res.status(201).cookie("jwt", token, options).json({ isAuthenticated: true, msg: "Sign Up successful!" });
+            res.status(201).cookie("jwt", token, options as CookieOptions).json({ isAuthenticated: true, msg: "Sign Up successful!" });
         } else {
 
 
 
             let token = createJwt(isUserExist._id.toString());
+            console.log(token);
             const options = {
                 expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-                httpOnly: true
+                httpOnly: true,
+                sameSite: "none",
+                secure: true
             }
-            res.status(200).cookie('jwt',token, options).json({ isAuthenticated: true, msg: "Login Successful!" })
+            res.status(200).cookie('jwt', token, options as CookieOptions).json({ isAuthenticated: true, msg: "Login Successful!" })
         }
 
 
