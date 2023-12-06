@@ -21,6 +21,14 @@ app.use(cors({
     origin: origin,
     credentials: true,
 }));
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.header(
+        "Access-Control-Allow-Headers"
+
+    );
+    next();
+});
 const server = createServer(app);
 
 const io = new Server(server, {
