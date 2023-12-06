@@ -22,7 +22,17 @@ app.use(cors({
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
+    
 }));
+app.use((req: any, res: Response, next) => {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    if (req.method === 'OPTIONS') {
+        res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+     
+    }
+    next();
+});
 
 const server = createServer(app);
 
@@ -42,14 +52,7 @@ v2.config({
 server.listen(PORT, () =>
     console.log(`server listening on port ${PORT}`)
 );
-app.use((req:any, res:Response, next) => {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-    res.header(
-        "Access-Control-Allow-Headers"
 
-    );
-    next();
-});
 
 app.use(express.json());
 app.use(cookieParser());
