@@ -14,37 +14,12 @@ import { createServer } from 'node:http';
 import User from "./models/userModel";
 const app = express();
 const origin = 'http://127.0.0.1:5173';
-// const corsOptions = {
-//     origin: origin,
-//     credentials: true,
-//     optionSuccessStatus: 200,
-//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept']
-  
-// }
-// app.use(cors(corsOptions));
-// app.use(cors({
-//     origin: origin,
-//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-//     credentials:true, //It enables cookies and authentication headers
-//     optionsSuccessStatus:204, //No content response for preflight requests
-//     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
+// origin: "https://heyamigo.netlify.app/"
 
-// }));
-// app.use(cors({
-//     credentials:true,
-//     "Access-Control-Allow-Origin": origin,
-    
-// }));
 
 app.use(cors({
     origin: origin, 
     credentials: true,
-    // optionsSuccessStatus: 200,
-    // methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    // allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
-    
-
 }));
 const server = createServer(app);
 
@@ -52,15 +27,9 @@ const io = new Server(server, {
     pingTimeout: 60000,
     cors: {
         origin: origin
-        // origin: "https://heyamigo.netlify.app/"
     }
 });
-// const io = new Server(server, {
-//     pingTimeout: 60000,
-//     cors: {
-//         origin: "*"
-//     }
-// });
+
 
 v2.config({
     cloud_name: process.env.CLOUD_NAME,
