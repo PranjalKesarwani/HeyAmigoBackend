@@ -21,14 +21,7 @@ app.use(cors({
     origin: origin,
     credentials: true,
 }));
-app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-    res.header(
-        "Access-Control-Allow-Headers"
 
-    );
-    next();
-});
 const server = createServer(app);
 
 const io = new Server(server, {
@@ -47,6 +40,14 @@ v2.config({
 server.listen(PORT, () =>
     console.log(`server listening on port ${PORT}`)
 );
+app.use((req:any, res:Response, next) => {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.header(
+        "Access-Control-Allow-Headers"
+
+    );
+    next();
+});
 
 app.use(express.json());
 app.use(cookieParser());
