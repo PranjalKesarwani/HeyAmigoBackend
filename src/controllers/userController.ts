@@ -68,7 +68,7 @@ export const login = async (req: any, res: Response) => {
                         sameSite: 'none',
                         secure: true
                     };
-                    console.log(token);
+                  
 
                     res.status(200).cookie("jwt", token, options as CookieOptions).json({ isAuthenticated: true, msg: "Log In successful!" });
 
@@ -88,7 +88,8 @@ export const logout = async (req: any, res: Response) => {
 
     try {
 
-        res.status(200).clearCookie('jwt').json({ msg: 'Logged out successfully' });
+        res.status(200).clearCookie('jwt',{sameSite:'none',secure:true}).json({ msg: 'Logged out successfully' });
+        
 
     } catch (error) {
         console.log(error);
@@ -98,7 +99,6 @@ export const logout = async (req: any, res: Response) => {
 }
 
 export const getUserData = async (req: any, res: Response) => {
-    console.log('getuserdata');
 
     try {
 
@@ -191,7 +191,7 @@ export const registerGuest = async (req: any, res: Response) => {
 
 
             let token = createJwt(isUserExist._id.toString());
-            console.log(token);
+      
             const options = {
                 expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
                 httpOnly: true,

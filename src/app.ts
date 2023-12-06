@@ -13,12 +13,12 @@ import { v2 } from "cloudinary";
 import { createServer } from 'node:http';
 import User from "./models/userModel";
 const app = express();
-const origin = 'http://127.0.0.1:5173';
-// origin: "https://heyamigo.netlify.app/"
+// const origin = 'http://127.0.0.1:5173';
+const origin = "https://heyamigo.netlify.app/";
 
 
 app.use(cors({
-    origin: origin, 
+    origin: origin,
     credentials: true,
 }));
 const server = createServer(app);
@@ -30,22 +30,11 @@ const io = new Server(server, {
     }
 });
 
-
 v2.config({
     cloud_name: process.env.CLOUD_NAME,
     api_key: process.env.API_KEY,
     api_secret: process.env.API_SECRET,
 });
-
-
-
-
-
-
-
-
-
-
 
 server.listen(PORT, () =>
     console.log(`server listening on port ${PORT}`)
