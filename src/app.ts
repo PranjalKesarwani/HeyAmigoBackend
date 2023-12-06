@@ -20,6 +20,8 @@ const origin = "https://heyamigo.netlify.app/";
 app.use(cors({
     origin: origin,
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
 }));
 
 const server = createServer(app);
