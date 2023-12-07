@@ -22,8 +22,8 @@ app.use(cors({
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: ['Content-Type'],
-    // preflightContinue:true,
-    // optionsSuccessStatus:204
+    preflightContinue:true,
+    optionsSuccessStatus:204
 
 }));
 // app.use((req: any, res: Response, next) => {
