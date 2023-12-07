@@ -13,8 +13,8 @@ import { v2 } from "cloudinary";
 import { createServer } from 'node:http';
 import User from "./models/userModel";
 const app = express();
-// const origin = 'http://127.0.0.1:5173';
-const origin = "https://heyamigo.netlify.app/";
+const origin = 'http://127.0.0.1:5173';
+// const origin = "https://heyamigo.netlify.app/";
 
 
 app.use(cors({
