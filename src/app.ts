@@ -17,15 +17,30 @@ const app = express();
 const origin = "https://heyamigo.netlify.app/";
 
 
-app.use(cors({
-    origin: origin,
-    credentials: true,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: ['Content-Type'],
-    preflightContinue:true,
-    optionsSuccessStatus:204
+// app.use(cors({
+//     origin: origin,
+//     credentials: true,
+//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//     allowedHeaders: ['Content-Type'],
+//     preflightContinue:true,
+//     optionsSuccessStatus:204
 
-}));
+// }));
+app.use(cors({
+    origin:origin,
+    credentials:true
+
+}))
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Request-Headers', '*');
+    if (req.method === "OPTIONS") {
+      res.header('Access-Control-Allow-Methods', '*');
+      return res.status(200).json({});
+    }
+    next();
+  });
 // app.use((req: any, res: Response, next) => {
 //     // res.header("Access-Control-Allow-Origin", origin);
 //     // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
