@@ -32,13 +32,11 @@ app.use((0, cors_1.default)({
     credentials: true
 }));
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', origin);
-    res.header('Access-Control-Allow-Headers', '*');
-    res.header('Access-Control-Request-Headers', '*');
-    if (req.method === "OPTIONS") {
-        res.header('Access-Control-Allow-Methods', '*');
-        return res.status(200).json({});
-    }
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.header(
+        "Access-Control-Allow-Headers"
+
+    );
     next();
 });
 // app.use((req: any, res: Response, next) => {
