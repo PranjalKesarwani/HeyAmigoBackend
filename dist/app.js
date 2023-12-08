@@ -19,22 +19,23 @@ const userModel_1 = __importDefault(require("./models/userModel"));
 const app = (0, express_1.default)();
 // const origin = 'http://127.0.0.1:5173';
 const origin = "https://heyamigo.netlify.app/";
-app.use(cors({
-    origin: origin,
-    credentials: true,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: ['Content-Type'],
-    preflightContinue:true,
-    optionsSuccessStatus:204
-}));
-// app.use((0, cors_1.default)({
+// app.use(cors({
 //     origin: origin,
 //     credentials: true,
 //     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//     allowedHeaders: ['Origin','Accept','X-Requested-With','Content-Type','Authorization'],
-    
-//     optionsSuccessStatus: 204
+//     allowedHeaders: ['Content-Type'],
+//     preflightContinue:true,
+//     optionsSuccessStatus:204
 // }));
+app.use((0, cors_1.default)({
+    origin: origin,
+    credentials: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: ['Origin','Accept','X-Requested-With','Content-Type','Authorization'],
+    preflightContinue:true,
+    
+    optionsSuccessStatus: 204
+}));
 // app.use((req, res, next) => {
 //     res.setHeader("Access-Control-Allow-Origin", origin);
 //     res.header(
@@ -61,7 +62,8 @@ const io = new socket_io_1.Server(server, {
     pingTimeout: 60000,
     cors: {
         origin: origin
-    }
+    },
+    transports: ['polling']
 });
 cloudinary_1.v2.config({
     cloud_name: process.env.CLOUD_NAME,
