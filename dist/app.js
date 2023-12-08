@@ -61,9 +61,9 @@ const server = (0, node_http_1.createServer)(app);
 const io = new socket_io_1.Server(server, {
     pingTimeout: 60000,
     cors: {
-        origin: origin
+        origin: "*"
     },
-    transports: ['polling']
+   
 });
 cloudinary_1.v2.config({
     cloud_name: process.env.CLOUD_NAME,
