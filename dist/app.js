@@ -31,7 +31,7 @@ app.use((0, cors_1.default)({
     origin: origin,
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: ['Content-Type'],
+    allowedHeaders: ['Content-Type','Authorization'],
 
     optionsSuccessStatus: 204
 }));
@@ -43,19 +43,19 @@ app.use((0, cors_1.default)({
 //     );
 //     next();
 // });
-// app.use((req: any, res: Response, next) => {
-//     // res.header("Access-Control-Allow-Origin", origin);
-//     // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-//     // res.setHeader('Access-Control-Allow-Origin', origin); 
-//     // res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
-//     // res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-//     res.set({
-//         'Access-Control-Allow-Origin': origin,
-//         'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-//         'Access-Control-Allow-Headers': 'Origin, Content-Type, Accept, X-Requested-With, Authorization'
-//     });
-//     next();
-// });
+app.use((req, res, next) => {
+    // res.header("Access-Control-Allow-Origin", origin);
+    // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    // res.setHeader('Access-Control-Allow-Origin', origin); 
+    // res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+    // res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.set({
+        'Access-Control-Allow-Origin': origin,
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Origin, Content-Type, Accept, X-Requested-With, Authorization'
+    });
+    next();
+});
 const server = (0, node_http_1.createServer)(app);
 const io = new socket_io_1.Server(server, {
     pingTimeout: 60000,
