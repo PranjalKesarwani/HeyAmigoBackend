@@ -31,8 +31,8 @@ app.use((0, cors_1.default)({
     origin: origin,
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: ['Content-Type','Authorization'],
-
+    allowedHeaders: ['Origin','Accept','X-Requested-With','Content-Type','Authorization'],
+    
     optionsSuccessStatus: 204
 }));
 // app.use((req, res, next) => {
