@@ -179,7 +179,7 @@ export const registerGuest = async (req: any, res: Response) => {
             })
             let token = createJwt(user!._id.toString());
             const options = {
-                expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+                expires: new Date(Date.now() + 600000),
                 httpOnly: true,
                 sameSite: 'none',
                 secure: true
@@ -193,7 +193,7 @@ export const registerGuest = async (req: any, res: Response) => {
             let token = createJwt(isUserExist._id.toString());
       
             const options = {
-                expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+                expires: new Date(Date.now() + 600000),
                 httpOnly: true,
                 sameSite: "none",
                 secure: true
