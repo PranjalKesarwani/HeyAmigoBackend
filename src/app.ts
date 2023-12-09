@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import "./config/server";
-const PORT = 5000 || process.env.PORT;
+const PORT =  process.env.PORT || 5000 ;
 import cookieParser from "cookie-parser"
 import userRoutes from "./routes/userRoutes"
 import messageRoutes from "./routes/messageRoutes"

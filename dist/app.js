@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 require("./config/server");
-const PORT = 5000 || process.env.PORT;
+const PORT =  process.env.PORT || 5000 ;
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const messageRoutes_1 = __importDefault(require("./routes/messageRoutes"));
