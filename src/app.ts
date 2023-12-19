@@ -32,7 +32,7 @@ const server = createServer(app);
 const io = new Server(server, {
     pingTimeout: 60000,
     cors: {
-        origin: "*"
+        origin: origin
     }
 });
 
