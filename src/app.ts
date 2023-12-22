@@ -77,6 +77,9 @@ type TArgsendInUserRoom = {
 }
 // types------------------------------------
 
+const emailToSocketIdMap = new Map();
+const socketIdToemailMap = new Map();
+
 io.on('connection', async (socket) => {
     console.log(`Socket ${socket.id} connected`);
 
@@ -114,6 +117,36 @@ io.on('connection', async (socket) => {
 
 
     })
+
+//socket for video call feature
+
+  socket.on('room:join',(data)=>{
+    const {email,room} = data;
+    console.log(email,room);
+    emailToSocketIdMap.set(email,socket.id);
+    socketIdToemailMap.set(socket.id,email);
+    io.to(room).emit('user:joined', {email, id: socket.id}) //if new user comes in existing room then we will join hi then push in the room
+    socket.join(room);
+    io.to(socket.id).emit("room:join",data);
+  });
+
+
+  socket.on('user:call', ({to,offer})=>{
+        io.to(to).emit('incoming:call', {from: socket.id, offer});
+  });
+  socket.on('call:accepted',({to,ans})=>{
+    io.to(to).emit("call:accepted",{from:socket.id, ans});
+  });
+
+  socket.on('peer:nego:needed',({to,offer})=>{
+    io.to(to).emit("peer:nego:needed",{from:socket.id, offer});
+  });
+  socket.on("peer:nego:done", ({to, ans})=>{
+    io.to(to).emit("peer:nego:final",{from:socket.id, ans});
+
+  })
+
+//socket for video call feature
 
     socket.on('disconnect', () => {
         console.log(`Socket ${socket.id} disconnected!`)
