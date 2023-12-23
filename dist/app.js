@@ -54,11 +54,13 @@ app.use("/api/grpcontact-routes", grpChatRoutes_1.default);
 // types------------------------------------
 const emailToSocketIdMap = new Map();
 const socketIdToemailMap = new Map();
+const emailToSocketIdMapI = new Map();
+const socketIdToemailMapI = new Map();
 io.on('connection', async (socket) => {
     console.log(`Socket ${socket.id} connected`);
     //Creating room using userId
     socket.on('createUserRoom', (userInfo) => {
-        socket.join(userInfo.userId);
+        socket.join(userInfo.userId); //isse room create hota hai  and agar existing room me jana hai toh io.to()
         socket.emit('createdUserRoom');
     });
     socket.on('sentMsgInUserRoom', (data) => {
@@ -81,15 +83,16 @@ io.on('connection', async (socket) => {
             socket.in(element._id).emit('receivedMsgForG', { chatId: data.chatId, msgId: data.msgId });
         });
     });
-    //socket for video call feature
+    //socket for video call feature demo begins
     socket.on('room:join', (data) => {
         const { email, room } = data;
         console.log(email, room);
-        emailToSocketIdMap.set(email, socket.id);
-        socketIdToemailMap.set(socket.id, email);
+        // emailToSocketIdMap.set(email,socket.id);
+        // socketIdToemailMap.set(socket.id,email);
+        //if the room already exist at global level, then the incoming user will join the room so only then this socket will work and if the room does not exist then only socket.join will create a room using that roomId
         io.to(room).emit('user:joined', { email, id: socket.id }); //if new user comes in existing room then we will join hi then push in the room
         socket.join(room);
-        io.to(socket.id).emit("room:join", data);
+        io.to(socket.id).emit("room:join", data); //Here both users will emit this event to them informing that they had joined the room
     });
     socket.on('user:call', ({ to, offer }) => {
         io.to(to).emit('incoming:call', { from: socket.id, offer });
@@ -103,7 +106,35 @@ io.on('connection', async (socket) => {
     socket.on("peer:nego:done", ({ to, ans }) => {
         io.to(to).emit("peer:nego:final", { from: socket.id, ans });
     });
-    //socket for video call feature
+    //socket for video call feature demo ends
+    //socket for video call feature implementation begins
+    socket.on('room:joinI', (data) => {
+        const { roomId } = data;
+        console.log(roomId);
+        // emailToSocketIdMapI.set(email,socket.id);
+        // socketIdToemailMapI.set(socket.id,email);
+        //if the room already exist at global level, then the incoming user will join the room so only then this socket will work and if the room does not exist then only socket.join will create a room using that roomId
+        io.to(roomId).emit('user:joinedI', { id: socket.id }); //if new user comes in existing room then we will join hi then push in the room
+        socket.join(roomId);
+        io.to(socket.id).emit("room:joinI", { roomId, msg: 'Socket connected!' }); //Here both users will emit this event to them informing that they had joined the room
+    });
+    socket.on('user:callI', ({ to, offer }) => {
+        io.to(to).emit('incoming:callI', { from: socket.id, offer });
+    });
+    socket.on('call:acceptedI', ({ to, ans }) => {
+        io.to(to).emit("call:acceptedI", { from: socket.id, ans });
+    });
+    socket.on('peer:nego:neededI', ({ to, offer }) => {
+        io.to(to).emit("peer:nego:neededI", { from: socket.id, offer });
+    });
+    socket.on("peer:nego:doneI", ({ to, ans }) => {
+        io.to(to).emit("peer:nego:finalI", { from: socket.id, ans });
+    });
+    socket.on('hanged', ({ to }) => {
+        console.log('--', to);
+        io.to(to).emit('hang:call', { msg: 'call hanged' });
+    });
+    //socket for video call feature implementation ends
     socket.on('disconnect', () => {
         console.log(`Socket ${socket.id} disconnected!`);
     });
