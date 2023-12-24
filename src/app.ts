@@ -169,6 +169,7 @@ io.on('connection', async (socket) => {
     });
 
     socket.on('user:callI', ({ to, offer }) => {
+        console.log('---', offer);
         io.to(to).emit('incoming:callI', { from: socket.id, offer });
     });
     socket.on('call:acceptedI', ({ to, ans }) => {
@@ -183,8 +184,8 @@ io.on('connection', async (socket) => {
 
     })
     socket.on('hanged', ({ to }) => {
-        console.log('--',to);
-        io.to(to).emit('hang:call',{msg:'call hanged'});
+       
+        io.to(to).emit('hang:call', { msg: 'call hanged' });
     })
 
     //socket for video call feature implementation ends
