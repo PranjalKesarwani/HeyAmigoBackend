@@ -119,6 +119,7 @@ io.on('connection', async (socket) => {
         io.to(socket.id).emit("room:joinI", { roomId, msg: 'Socket connected!' }); //Here both users will emit this event to them informing that they had joined the room
     });
     socket.on('user:callI', ({ to, offer }) => {
+        console.log('---', offer);
         io.to(to).emit('incoming:callI', { from: socket.id, offer });
     });
     socket.on('call:acceptedI', ({ to, ans }) => {
@@ -131,7 +132,6 @@ io.on('connection', async (socket) => {
         io.to(to).emit("peer:nego:finalI", { from: socket.id, ans });
     });
     socket.on('hanged', ({ to }) => {
-        console.log('--', to);
         io.to(to).emit('hang:call', { msg: 'call hanged' });
     });
     //socket for video call feature implementation ends
